@@ -1,0 +1,120 @@
+/* stylelint-disable at-rule-no-unknown */
+@import "colours.css";
+
+/* ── Base ───────────────────── */
+* {
+  border: none;
+  border-radius: 0;
+  font-family: Iosevka, monospace;
+  font-size: 11pt;
+  min-height: 0;
+}
+
+window#waybar {
+  opacity: 1;
+  background: @background-darker; /* ensure alpha in colours.css is 0–1 */
+  color: @foreground;
+  border-bottom: 2px solid @background;
+}
+
+/* ── Workspaces ─────────────── */
+#workspaces {
+  padding: 0 4px;
+}
+
+#workspaces button {
+  padding: 0 10px;
+  margin: 0 2px;
+  background-color: @background;
+  color: @foreground;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+#workspaces button:hover {
+  background-color: @selection;
+}
+
+/* Current workspace: violet box (cover common class variants) */
+window#waybar #workspaces button.active,
+window#waybar #workspaces button.focused,
+window#waybar #workspaces button.visible {
+  background-color: @purple;
+  background-image: none;
+  color: #1b1b1b;
+  font-weight: bold;
+}
+
+/* Urgent workspace */
+#workspaces button.urgent {
+  background-color: @red;
+  color: #1b1b1b;
+}
+
+/* ── Window title ───────────── */
+#window {
+  padding: 0 8px;
+  background: @background;
+  color: @foreground;
+}
+
+/* ── Common pill style ──────── */
+#clock,
+#tray,
+#language,
+#battery,
+#custom-weather,
+#network,
+#pulseaudio,
+#memory,
+#custom-notification,
+#privacy {
+  padding: 0 8px;
+  margin: 0 4px;
+  background: @background;
+  color: @foreground;
+  border-radius: 6px;
+}
+
+/* ── Icon font fallback (keep Iosevka, add symbols just for modules with icons) */
+#battery,
+#pulseaudio,
+#network,
+#clock,
+#custom-notification,
+#privacy,
+#memory {
+  /* Iosevka first for text width; fall back to symbols font for missing glyphs */
+    font-family:
+        Iosevka,
+        "Iosevka Nerd Font",            /* if installed */
+        "Symbols Nerd Font",
+        "Symbols Nerd Font Mono",
+        "Font Awesome 6 Free",
+        "Font Awesome 6 Brands",
+        "Noto Color Emoji",
+        monospace;
+    font-weight: normal;
+}
+
+/* ── State tints ────────────── */
+#network.disconnected { color: @red; }
+#network.linked       { color: @yellow; }
+#network.wifi,
+#network.ethernet     { color: @green; }
+
+#battery.charging { color: @green; }
+#battery.warning  { color: @orange; }
+#battery.critical { color: @red; }
+
+/* Taskbar (if you enable it) */
+#taskbar button.active {
+  background-color: @selection;
+}
+
+/* ── Notifications (swaync) ─── */
+#swaync { color: @foreground; }
+#swaync.dnd { color: @yellow; }   /* when Do-Not-Disturb is on */
+
+/* ── Privacy (recording/mic/cam/screenshare) ─── */
+#privacy { color: @foreground; }
+#privacy.active { color: @purple; } /* lights up when any privacy item is active */

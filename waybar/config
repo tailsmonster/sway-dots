@@ -1,0 +1,107 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 24,
+  "spacing": 4,
+
+  "modules-left": [
+    "sway/workspaces"
+  ],
+  "modules-center": [
+    "sway/window"
+  ],
+  "modules-right": [
+    "privacy",
+    "memory",
+    "pulseaudio",
+    "network",
+    "battery",
+    "clock",
+    "tray",
+    "custom/notification"
+  ],
+
+  "network": {
+    "format-wifi": "{icon}  {ipaddr}",
+    "format-ethernet": "  {ipaddr}",
+    "format-disconnected": "  no-net",
+    "tooltip-format": "{ifname} → {ipaddr}",
+    "format-icons": [
+      "",  "",  "",  "",  ""   // Waybar picks strength internally; use same glyph
+    ]
+  },
+
+  "sway/workspaces": {
+    "on-click": "activate",
+    "on-scroll-up": "swaymsg workspace prev",
+    "on-scroll-down": "swaymsg workspace next",
+    "all-outputs": true
+  },
+
+  "sway/window": { "max-length": 128 },
+
+  "pulseaudio": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "{icon}  muted",
+    "format-icons": {
+      "headphones": "",
+      "default": [ "", "", "" ]
+    },
+    "scroll-step": 2,
+    "max-volume": 100,
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "tooltip": false
+  },
+
+  "memory": {
+    "interval": 5,
+    "format": "  {percentage}%",
+    "tooltip": false
+  },
+
+  "battery": {
+    "states": { "warning": 25, "critical": 10 },
+    "format": "{icon}  {capacity}%",
+    "format-charging": "  {capacity}%",
+    "format-plugged": "  {capacity}%",
+    "format-full": "  full",
+    "format-icons": [ "", "", "", "", "" ],
+    "tooltip": false
+  },
+
+  "clock": {
+    "format": "  {:%a %b %d  %H:%M}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+  },
+
+  "tray": { "spacing": 6 },
+
+  "custom/notification": {
+    "tooltip": true,
+    "format": "{} {icon}",
+    "format-icons": {
+        "notification": "󱅫", // Icon when notifications are present
+        "none": "",        // Icon when no notifications are present
+        "dnd-notification": "", // Icon when DND is active and notifications are present
+        "dnd-none": "󰂛",        // Icon when DND is active and no notifications are present
+        // Add other format-icons for inhibited states if desired
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb", // Subscribe to Waybar events
+    "on-click": "sleep 0.1 && swaync-client -t -sw", // Toggle notification panel on left click
+    "on-click-right": "sleep 0.1 && swaync-client -d -sw", // Toggle DND on right click
+    "escape": true
+  },
+
+  "privacy": {
+    "icon-size": 16,
+    "icon-spacing": 6,
+    "transition-duration": 0,
+    "modules": [
+      { "type": "screenshare", "tooltip": "Screen sharing", "format": "" },
+      { "type": "audio-in",    "tooltip": "Microphone",    "format": "" },
+      { "type": "camera",      "tooltip": "Camera",        "format": "" }
+    ]
+  }
+}
