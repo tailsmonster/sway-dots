@@ -15,6 +15,9 @@ dependancies
 - nemo (file manager)
 - swaync (notification manager)
 - ly (login manager)
+- *FONTS*
+  - `sudo pacman -Sy ttf-firacode-nerd ttf-iosevka-nerd` 
+  - `yay -S ttf-iosevka` 
 - i'll be sure to add more stuff, if i can remember them lol
 
 
