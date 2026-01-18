@@ -72,7 +72,7 @@ window#waybar #workspaces button.visible {
   margin: 0 4px;
   background: @background;
   color: @foreground;
-  border-radius: 6px;
+  border-radius: 0px;
 }
 
 /* ── Icon font fallback (keep Iosevka, add symbols just for modules with icons) */

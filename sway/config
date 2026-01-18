@@ -1,6 +1,5 @@
-# This is the sway config file made by diinki, as part of a retro futuristic linux rice,
-# made for my "Linux Ricing Guide" video, watch it if you want to learn more about linux
-# and ricing!
+# This is the sway config file made by diinki, as part their a retro futuristic linux rice,
+# I`ve made some modifications to suit my tastes (dwm head lol)
 #
 # The license is included in the repo (MIT License)
 
@@ -24,6 +23,10 @@ exec_always --no-startup-id swaync --daemon
 exec_always --no-startup-id systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
 exec_always --no-startup-id dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE=wayland
 
+# --- LANGUAGES ----
+exec_always fcitx5 -d
+
+
 
 
 # Start the network manager applet, can comment out this line if you don't use network manager.
@@ -36,14 +39,18 @@ exec nm-applet
 # ===================== MONITORS ==================================
 # enter `swaymsg -t get_outputs` to get your monitor details.
 
-# adaptive sync baybee
-# output * adaptive_sync on
 
 # These are simply my details, they **wont** work for you, I've
 # included them to serve as an example.
-# output DP-3 pos 0  0 res 3440x1440@99.982Hz
-# output HDMI-A-1 pos 3440 0 res 1920x1080@60.000Hz
+#output DP-3 pos 1920 0 res 2560x1440@164.835Hz
+#output DP-1 pos 0 0 res 1920x1080@144.001Hz
 # output HDMI-A-2 pos 4480 0 res 3840x2160@59.997Hz
+
+# output eDP-1 pos 0 0 res 1920x1200@60Hz
+
+output DP-2 pos 0 0 res 3440x1440@59.973Hz 
+output eDP-1 pos 760 1440 res 1920x1200@60Hz 
+
 # =================================================================
 
 
@@ -53,7 +60,11 @@ exec nm-applet
 # to the specific display output. Make sure to edit the directory
 # to your wallpaper!
 
-output * bg "/home/tailsmonster/Pictures/wallpaper3.png" fill
+output * bg "/home/tailsmonster/Pictures/Wallpapers/wallpaper.png" fill
+output * bg "/home/tailsmonster/Pictures/Wallpapers/wallpaper2.png" fill
+output * bg "/home/tailsmonster/Pictures/Wallpapers/wallpaper3.png" fill
+output * bg "/home/tailsmonster/Pictures/Wallpapers/wallpaper4.png" fill
+output * bg "/home/tailsmonster/Pictures/Wallpapers/wallpaper5.jpeg" fill
 # =================================================================
 
 
@@ -87,9 +98,11 @@ default_border pixel 1px
 default_floating_border pixel 1px
 
 # Corner radius!!
-corner_radius 0
+corner_radius 15
+layer_effects waybar corner_radius 0
 
-layer_effects "chromium" { corner_radius 0; }
+
+
 
 # The border colors:
 
@@ -139,7 +152,7 @@ bindsym $mod+Backspace opacity set 1
 # for instance, if you want spanish; or any other.
 # You toggle between the languages with ALT+SHIFT
 input * {
-  xkb_layout "us"
+  xkb_layout "jp,us"
   xkb_options "grp:alt_shift_toggle"
 }
 
@@ -157,23 +170,10 @@ bar {
 
 
 # ===================== SCREENSHOTS ===============================
-# There's a few different ways to handle screenshots in an
-# easy way, I've decided to use a combination of three apps:
-# grim, slurp, and swappy. Feel free to use a different screenshot
-# solution.
 
-
-#bindsym $mod+Shift+s exec "QT_QPA_PLATFORM=xcb flameshot gui"
-# bindsym $mod+Shift+s exec grim -g "$(slurp)" - | swappy -f -
-
-  bindsym Print exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') $(xdg-user-dir)/Pictures/Screenshot_$(date +'%Y-%m-%d-%H%M%S.png')
-  bindsym Alt+Print exec grim $(xdg-user-dir)/Pictures/Screenshot_$(date +'%Y-%m-%d-%H%M%S.png')
-  bindsym Control+Print exec grim -g "$(slurp)" $(xdg-user-dir)/Pictures/Screenshot_$(date +'%Y-%m-%d-%H%M%S.png')
-  bindsym Shift+Print exec grim -g "$(slurp)" - | wl-copy
-  bindsym $mod+tab workspace back_and_forth
-
-# =================================================================
-
+bindsym Print         exec --no-startup-id ~/.local/bin/screenshots_sway.sh #monitor
+bindsym Shift+Print   exec --no-startup-id ~/.local/bin/screenshots_sway.sh window
+bindsym Control+Print exec --no-startup-id ~/.local/bin/screenshots_sway.sh cursor
 
 
 # ===================== BASIC KEYBINDS ============================
@@ -216,7 +216,7 @@ bindsym $mod+Shift+$down move down
 bindsym $mod+Shift+$up move up
 bindsym $mod+Shift+$right move right
 bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Down move down6
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
