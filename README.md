@@ -15,6 +15,7 @@ dependancies
 - nemo (file manager)
 - swaync (notification manager)
 - ly (login manager)
+- starship (pretty terminal thingy ^^)
 - *FONTS*
   - `sudo pacman -Sy ttf-firacode-nerd ttf-iosevka-nerd` 
   - `yay -S ttf-iosevka` 
