@@ -2,8 +2,8 @@
 set -euo pipefail
 
 MAIN_DIR="${HOME}/Pictures/Screenshots"
-YEAR=$(date '+%Y')
-MONTH=$(date '+%B')
+YEAR="$(date '+%Y')"
+MONTH="$(date '+%B')"
 SAVE_DIR="${MAIN_DIR}/${YEAR}/${MONTH}"
 mkdir -p "$SAVE_DIR"
 
@@ -26,8 +26,19 @@ need jq
 need notify-send
 need slurp
 
+copy_and_notify() {
+  wl-copy < "$FILE"
+  notify-send -h string:x-canonical-private-synchronous:screenshot "$1" "Saved & copied: $FILE"
+}
+
+select_region() {
+  XCURSOR_THEME="${XCURSOR_THEME:-Adwaita}" slurp
+}
+
 # Find the focused *window-ish* node.
-# We prefer nodes that actually represent a view: app_id (Wayland native) or window_properties (Xwayland).
+# Prefer nodes that actually represent a view:
+# - app_id for native Wayland apps
+# - window_properties for Xwayland apps
 FOCUSED_JSON="$(
   swaymsg -t get_tree | jq -c '
     .. | objects
@@ -48,27 +59,44 @@ FW="$(jq -r '.w' <<<"$FOCUSED_JSON")"
 FH="$(jq -r '.h' <<<"$FOCUSED_JSON")"
 FOCUSED_OUT="$(jq -r '.out' <<<"$FOCUSED_JSON")"
 
-copy_and_notify() {
-  wl-copy < "$FILE"
-  notify-send -h string:x-canonical-private-synchronous:screenshot "$1" "Saved & copied: $FILE"
-}
-
 if [[ "$MODE" == "window" ]]; then
   grim -g "${FX},${FY} ${FW}x${FH}" "$FILE"
   copy_and_notify "📸 Screenshot (window)"
   exit 0
 fi
 
-if [[ "$MODE" == "cursor" ]]; then
-  grim -g "$(slurp)" "$FILE"
-  copy_and_notify "🖱️ Screenshot (cursor)"
+if [[ "$MODE" == "region" || "$MODE" == "cursor" ]]; then
+  GEOM="$(select_region || true)"
+
+  if [[ -z "$GEOM" ]]; then
+    notify-send "❌ Screenshot failed" "slurp failed or no region selected"
+    exit 1
+  fi
+
+  grim -g "$GEOM" "$FILE"
+  copy_and_notify "🖱️ Screenshot (selection)"
+  exit 0
+fi
+
+if [[ "$MODE" == "region-cursor" ]]; then
+  GEOM="$(select_region || true)"
+
+  if [[ -z "$GEOM" ]]; then
+    notify-send "❌ Screenshot failed" "slurp failed or no region selected"
+    exit 1
+  fi
+
+  grim -c -g "$GEOM" "$FILE"
+  copy_and_notify "🖱️ Screenshot (selection + cursor)"
   exit 0
 fi
 
 # Default: monitor containing focused window.
-# If we can't determine output, fall back to the currently focused output.
+# If output can't be determined from the node, fall back to the focused output.
 if [[ -z "$FOCUSED_OUT" || "$FOCUSED_OUT" == "null" ]]; then
-  FOCUSED_OUT="$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name' | head -n 1)"
+  FOCUSED_OUT="$(
+    swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name' | head -n 1
+  )"
 fi
 
 OUT_RECT="$(
