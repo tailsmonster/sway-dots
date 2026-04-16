@@ -101,7 +101,6 @@
     "modules": [
       { "type": "screenshare", "tooltip": "Screen sharing", "format": "" },
       { "type": "audio-in",    "tooltip": "Microphone",    "format": "" },
-      { "type": "camera",      "tooltip": "Camera",        "format": "" }
     ]
   }
 }
